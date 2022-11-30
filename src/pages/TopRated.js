@@ -1,9 +1,24 @@
 import React from "react";
+import ProductCard from "../components/ProductCard";
+import { useProducts } from "../Context/ProductProvider";
 
 const TopRated = () => {
+  const { state:{products,loading,error} } = useProducts();
+  let content;
+  if (loading) {
+    content = <h1>Loading...</h1>;
+  }
+  if (error) {
+    content = <h1>Error...</h1>;
+  }
+  if (!loading&&!error&&products.length > 0) {
+    content = products.filter(pr=>pr.rating>=4).map((product) => {
+      return <ProductCard product={product} key={product.id} />;
+    });
+  }
   return (
     <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 max-w-7xl gap-14 mx-auto my-10'>
-      <h1>This is featured page</h1>
+      {content}
     </div>
   );
 };
